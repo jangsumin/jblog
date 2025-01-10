@@ -5,6 +5,12 @@
 	version="5.0">
 	<display-name>jblog03</display-name>
 	
+	<!--  Context Parameter -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+	
 	<!-- Dispatcher Servlet -->
 	<servlet>
 		<servlet-name>spring</servlet-name>
