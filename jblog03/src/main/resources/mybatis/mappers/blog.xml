@@ -19,6 +19,22 @@
 	</insert>
 
 	<select id="getAllCategoriesById" parameterType="string" resultType="categoryvo">
-		<![CDATA[select id, name, description, blog_id as blogId from category where blog_id=#{id}]]>
+		<![CDATA[select a.id, a.name, a.description, a.blog_id as blogId, count(b.category_id) as count from category a left join post b on a.id = b.category_id where a.blog_id=#{id} group by a.id]]>
+	</select>	
+	
+	<delete id="deleteCategory" parameterType="long">
+		<![CDATA[delete from category where id=#{id}]]>
+	</delete>
+	
+	<insert id="insertPost" parameterType="postvo">
+		<![CDATA[insert into post values(null, #{contents}, now(), #{categoryId}, #{title})]]>
+	</insert>
+
+	<select id="getAllPostById" parameterType="string" resultType="postvo">
+		<![CDATA[select a.id, a.contents, date_format(a.reg_date, '%Y/%m/%d') as regDate, a.category_id as categoryId, a.title from post a join category b on a.category_id = b.id where b.blog_id=#{id} order by a.reg_date desc]]>
+	</select>
+	
+	<select id="getPostsByCategoryId" parameterType="map" resultType="postvo">
+		<![CDATA[select a.id, a.contents, date_format(a.reg_date, '%Y/%m/%d') as regDate, a.category_id as categoryId, a.title from post a join category b on a.category_id = b.id where b.blog_id=#{id} and a.category_id=#{categoryId} order by a.reg_date desc]]>
 	</select>	
 </mapper>

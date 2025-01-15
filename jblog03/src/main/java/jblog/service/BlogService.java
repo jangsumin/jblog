@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import jblog.repository.BlogRepository;
 import jblog.vo.BlogVo;
 import jblog.vo.CategoryVo;
+import jblog.vo.PostVo;
 
 @Service
 public class BlogService {
@@ -29,5 +30,22 @@ public class BlogService {
 
 	public List<CategoryVo> getAllCategoriesById(String id) {
 		return blogRepository.getAllCategoriesById(id);
+	}
+
+	public boolean deleteCategory(Long id) {
+		int numberOfDeletedCategory = blogRepository.deleteCategory(id);
+		return numberOfDeletedCategory == 1;
+	}
+
+	public void insertPost(PostVo postVo) {
+		blogRepository.insertPost(postVo);
+	}
+
+	public List<PostVo> getAllPostById(String id) {
+		return blogRepository.getAllPostById(id);
+	}
+
+	public List<PostVo> getPostsByCategoryId(String id, Long categoryId) {
+		return blogRepository.getPostsByCategoryId(id, categoryId);
 	}
 }

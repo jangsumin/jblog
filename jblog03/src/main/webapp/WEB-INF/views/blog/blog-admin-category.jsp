@@ -7,7 +7,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>JBlog</title>
-<Link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
+<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+const handleButtonClick = (id) => {
+	fetch("${pageContext.request.contextPath}/api/admin/category/delete/" + id, {
+		method: "get",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}).then((response) => {
+		return response.json();
+	}).then((response) => {
+		if (!response.data.isDeleted) {
+			return;
+		}
+		location.reload();
+	});
+}
+</script>
 </head>
 <body>
 	<div id="container">
@@ -32,9 +50,9 @@
 		      			<tr>
 							<td>${count - status.index}</td>
 							<td>${vo.name}</td>
-							<td>10</td>
+							<td>${vo.count}</td>
 							<td>${vo.description}</td>
-							<td><img src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
+							<td><img src="${pageContext.request.contextPath}/assets/images/delete.jpg" onclick="handleButtonClick(${vo.id})"></td>
 						</tr>  
 		      		</c:forEach>  
 				</table>
