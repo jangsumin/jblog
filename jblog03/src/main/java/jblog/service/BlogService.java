@@ -48,4 +48,8 @@ public class BlogService {
 	public List<PostVo> getPostsByCategoryId(String id, Long categoryId) {
 		return blogRepository.getPostsByCategoryId(id, categoryId);
 	}
+
+	public PostVo getPostByCategoryIdAndPostId(String id, Long categoryId, Long postId) {
+		return blogRepository.getPostByCategoryIdAndPostId(id, categoryId, postId);
+	}
 }

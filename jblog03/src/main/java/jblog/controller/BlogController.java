@@ -20,6 +20,7 @@ import jblog.vo.CategoryVo;
 import jblog.vo.PostVo;
 
 @Controller
+@RequestMapping("/{id:(?!assets|user).*}")
 public class BlogController {
 	
 	@Autowired
@@ -28,47 +29,41 @@ public class BlogController {
 	@Autowired
 	private FileUploadService fileUploadService;
 	
-//	@GetMapping({"/{id}", "/{id}/{path1}", "/{id}/{path1}/{path2}"})
-//	public String blogMain(@PathVariable("id") String id, @PathVariable("path1") Optional<Long> path1, @PathVariable("path2") Optional<Long> path2, Model model) {
-//		Long categoryId = 0L;
-//		Long postId = 0L;
-//		
-//		if (path2.isPresent()) {
-//			categoryId = path1.get();
-//			postId = path2.get();
-//			
-//		} else if (path1.isPresent()) {
-//			categoryId = path1.get();
-//	
-//			List<PostVo> postList = blogService.getPostsByCategoryId(id, categoryId);
-//			model.addAttribute("postList", postList);
-//		} else {			
-//			List<PostVo> postList = blogService.getAllPostById(id);
-//			model.addAttribute("postList", postList);			
-//		}
-//		List<CategoryVo> categoryList = blogService.getAllCategoriesById(id);
-//		model.addAttribute("categoryList", categoryList);
-//		
-//		return "blog/blog-main";
-//	}
+	@GetMapping({"", "/{path1}", "/{path1}/{path2}"})
+	public String blogMain(@PathVariable("id") String id, @PathVariable("path1") Optional<Long> path1, @PathVariable("path2") Optional<Long> path2, Model model) {
+		Long categoryId = 0L;
+		Long postId = 0L;
+		
+		if (path2.isPresent()) {
+			categoryId = path1.get();
+			postId = path2.get();
+			
+			PostVo viewPost = blogService.getPostByCategoryIdAndPostId(id, categoryId, postId);
+			model.addAttribute("viewPost", viewPost);
+			
+			List<PostVo> postList = blogService.getPostsByCategoryId(id, categoryId);
+			model.addAttribute("postList", postList);
+		} else if (path1.isPresent()) {
+			categoryId = path1.get();
 	
-	@GetMapping("/{id}")
-	public String blogMain(@PathVariable("id") String id, Model model) {
-		List<PostVo> postList = blogService.getAllPostById(id);
-		model.addAttribute("postList", postList);			
-	
+			List<PostVo> postList = blogService.getPostsByCategoryId(id, categoryId);
+			model.addAttribute("postList", postList);
+		} else {			
+			List<PostVo> postList = blogService.getAllPostById(id);
+			model.addAttribute("postList", postList);		
+		}
 		List<CategoryVo> categoryList = blogService.getAllCategoriesById(id);
 		model.addAttribute("categoryList", categoryList);
 		
 		return "blog/blog-main";
 	}
 	
-	@GetMapping("/{id}/admin/basic")
+	@GetMapping("/admin/basic")
 	public String adminBasic() {
 		return "blog/blog-admin-basic";
 	}
 	
-	@PostMapping("/{id}/admin/basic")
+	@PostMapping("/admin/basic")
 	public String adminBasic(@PathVariable("id") String id, @RequestParam("title") String title, @RequestParam("profile") String profile, @RequestParam("logo-file") MultipartFile multipartFile) {
 		String newProfile = fileUploadService.restore(multipartFile);
 	
@@ -82,7 +77,7 @@ public class BlogController {
 		return "redirect:/" + id + "/admin/basic";
 	}
 	
-	@GetMapping("/{id}/admin/category")
+	@GetMapping("/admin/category")
 	public String adminCategory(@PathVariable("id") String id, Model model) {
 		List<CategoryVo> categoryList = blogService.getAllCategoriesById(id);
 		
@@ -90,7 +85,7 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 	
-	@PostMapping("/{id}/admin/category")
+	@PostMapping("/admin/category")
 	public String adminCategory(@PathVariable("id") String id, @RequestParam("name") String name, @RequestParam("desc") String description) {
 		CategoryVo categoryVo = new CategoryVo();
 		categoryVo.setName(name);
@@ -102,7 +97,7 @@ public class BlogController {
 		return "redirect:/" + id + "/admin/category";
 	}
 	
-	@GetMapping("/{id}/admin/write")
+	@GetMapping("/admin/write")
 	public String adminWrite(@PathVariable("id") String id, Model model) {
 		List<CategoryVo> categoryList = blogService.getAllCategoriesById(id);
 		
@@ -110,7 +105,7 @@ public class BlogController {
 		return "blog/blog-admin-write";
 	}
 	
-	@PostMapping("/{id}/admin/write")
+	@PostMapping("/admin/write")
 	public String adminWrite(@PathVariable("id") String id, @RequestParam("title") String title, @RequestParam("category") Long categoryId, @RequestParam("content") String contents) {
 		PostVo postVo = new PostVo();
 		postVo.setTitle(title);

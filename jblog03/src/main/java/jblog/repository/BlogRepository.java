@@ -52,4 +52,8 @@ public class BlogRepository {
 	public List<PostVo> getPostsByCategoryId(String id, Long categoryId) {
 		return sqlSession.selectList("blog.getPostsByCategoryId", Map.of("id", id, "categoryId", categoryId));
 	}
+
+	public PostVo getPostByCategoryIdAndPostId(String id, Long categoryId, Long postId) {
+		return sqlSession.selectOne("blog.getPostByCategoryIdAndPostId", Map.of("id", id, "categoryId", categoryId, "postId", postId));
+	}
 }

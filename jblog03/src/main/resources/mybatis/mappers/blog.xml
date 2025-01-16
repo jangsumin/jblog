@@ -36,5 +36,9 @@
 	
 	<select id="getPostsByCategoryId" parameterType="map" resultType="postvo">
 		<![CDATA[select a.id, a.contents, date_format(a.reg_date, '%Y/%m/%d') as regDate, a.category_id as categoryId, a.title from post a join category b on a.category_id = b.id where b.blog_id=#{id} and a.category_id=#{categoryId} order by a.reg_date desc]]>
+	</select>
+		
+	<select id="getPostByCategoryIdAndPostId" parameterType="map" resultType="postvo">
+		<![CDATA[select a.id, a.contents, date_format(a.reg_date, '%Y/%m/%d') as regDate, a.category_id as categoryId, a.title from post a join category b on a.category_id = b.id where b.blog_id=#{id} and a.category_id=#{categoryId} and a.id=#{postId}]]>
 	</select>	
 </mapper>

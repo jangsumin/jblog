@@ -16,12 +16,20 @@
 		<div id="wrapper">
 			<div id="content">
 				<div class="blog-content">
-					<h4>${postList[0].title}</h4>
-					<p>${fn:replace(postList[0].contents, newLine, "<br>")}</p>
+					<c:choose>
+						<c:when test="${empty viewPost}">
+							<h4>${postList[0].title}</h4>
+							<p>${fn:replace(postList[0].contents, newLine, "<br>")}</p>						
+						</c:when>
+						<c:otherwise>
+							<h4>${viewPost.title}</h4>
+							<p>${fn:replace(viewPost.contents, newLine, "<br>")}</p>				
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<ul class="blog-list">
 					<c:forEach items="${postList}" var="vo" varStatus="status">
-						<li><a href="">${vo.title}</a> <span>${vo.regDate}</span></li>					
+						<li><a href="${pageContext.request.contextPath}/${blogVo.blogId}/${vo.categoryId}/${vo.id}">${vo.title}</a> <span>${vo.regDate}</span></li>					
 					</c:forEach>
 				</ul>
 			</div>
